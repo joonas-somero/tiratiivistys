@@ -4,9 +4,11 @@ version = "0.1.0"
 description = ""
 authors = ["Joonas Somero <joonas.somero@helsinki.fi>"]
 readme = "README.md"
+packages = [{include = "tiratiivistys", from = "src"}]
 
 [tool.poetry.dependencies]
 python = "^3.11"
+click = "^8.1.7"
 
 
 [tool.poetry.group.dev.dependencies]
