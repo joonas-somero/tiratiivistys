@@ -8,11 +8,18 @@ from tiratiivistys.lempel_ziv.window \
 class TestEncodedRange(unittest.TestCase):
     def test_encode_returns_appropriate_object(self):
         character = int.from_bytes(b'c')
-        offset = 0
-        length = 0
+        offset = length = 2
+
+        start = 0
+        frame = b'ab'
+        history = b'ab'
+        buffer = b'abc'
 
         expectation = EncodedRange(character)
-        result = EncodedRange.encode(character, offset, length)
+        expectation.offset = offset
+        expectation.length = length
+
+        result = EncodedRange.encode(start, frame, history, buffer)
 
         self.assertIsInstance(result, EncodedRange)
         self.assertEqual(bytes(result), bytes(expectation))
