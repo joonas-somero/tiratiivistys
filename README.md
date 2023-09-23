@@ -18,4 +18,4 @@
 >
 > * [Viikkoraportti 1](course/viikkoraportti1.md)
 > * [Viikkoraportti 2](course/viikkoraportti2.md)
-
+> * [Viikkoraportti 3](course/viikkoraportti3.md)
