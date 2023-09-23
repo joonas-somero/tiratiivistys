@@ -15,16 +15,13 @@ from .lempel_ziv import LempelZiv
 @click.argument('file', type=click.File('rb'))
 def command_line_interface(compress, algorithm, file):
     """Restore previously compressed FILE to original, or compress FILE."""
-    if algorithm == "huffman":
-        if compress:
-            Huffman.compress(file)
-        else:
-            Huffman.restore(file)
-    elif algorithm == "lempel-ziv":
-        if compress:
-            LempelZiv.compress(file)
-        else:
-            LempelZiv.restore(file)
 
-    operation = compress and "Compressing" or "Restoring"
-    click.echo(f"{operation} {file.name} using {algorithm}...")
+    verb = compress and 'Compressing' or 'Restoring'
+    click.echo(
+        f"{verb} {file.name} using {algorithm}...")
+
+    selected = algorithm.lower()
+    operation = compress and "compress" or "restore"
+    imports = {"huffman": Huffman, "lempel-ziv": LempelZiv}
+
+    getattr(imports[selected], operation)(file)
