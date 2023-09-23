@@ -12,6 +12,7 @@
 >
 > * [Määrittelydokumentti](course/maarittelydokumentti.md)
 > * [Käyttöohje](course/kayttoohje.md)
+> * [Testausdokumentti](course/testausdokumentti.md)
 >
 >
 > ### Viikkoraportit
