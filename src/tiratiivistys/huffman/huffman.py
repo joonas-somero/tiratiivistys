@@ -3,8 +3,9 @@ from .tree import HuffmanTree
 
 class Huffman:
     """An interface to compress and restore files using Huffman Coding."""
-    @staticmethod
-    def __count_occurrences(file) -> dict:
+
+    @classmethod
+    def __count_occurrences(cls, file) -> dict:
         """Returns a tuple of (occurrences, total_bytes), where
            - occurrences is a dict with bytes (hex) as keys for the
              number of occurrences of the byte in question found in file
@@ -20,13 +21,13 @@ class Huffman:
 
         return occurrences, total_bytes
 
-    @staticmethod
-    def compress(file) -> None:
-        occurrences, total_bytes = Huffman.__count_occurrences(file)
+    @classmethod
+    def compress(cls, file) -> None:
+        occurrences, total_bytes = cls.__count_occurrences(file)
         huffman_tree = HuffmanTree.from_occurrences(occurrences, total_bytes)
 
         compressed_file = None
 
-    @staticmethod
-    def restore(file) -> None:
+    @classmethod
+    def restore(cls, file) -> None:
         pass

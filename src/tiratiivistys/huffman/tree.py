@@ -29,9 +29,9 @@ class HuffmanTree:
         self.root = None
         self.queue = PriorityQueue()
 
-    @staticmethod
-    def from_occurrences(occurrences, total):
-        tree = HuffmanTree()
+    @classmethod
+    def from_occurrences(cls, occurrences, total):
+        tree = cls()
 
         for key, value in occurrences.items():
             leaf = Leaf(key, Fraction(int(value), total))
