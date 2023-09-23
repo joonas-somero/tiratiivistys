@@ -1,3 +1,4 @@
+from typing import BinaryIO
 import click
 from .huffman import Huffman
 from .lempel_ziv import LempelZiv
@@ -13,7 +14,9 @@ from .lempel_ziv import LempelZiv
               is_flag=True,
               help='compress FILE')
 @click.argument('file', type=click.File('rb'))
-def command_line_interface(compress, algorithm, file):
+def command_line_interface(compress: bool,
+                           algorithm: str,
+                           file: BinaryIO) -> None:
     """Restore previously compressed FILE to original, or compress FILE."""
 
     verb = compress and 'Compressing' or 'Restoring'
