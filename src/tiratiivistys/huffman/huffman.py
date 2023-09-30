@@ -1,12 +1,13 @@
 from typing import BinaryIO, Tuple
+from tiratiivistys.classes import Compressor
 from .tree import HuffmanTree
 
 
-class Huffman:
+class Huffman(Compressor):
     """An interface to compress and restore files using Huffman Coding."""
 
-    @classmethod
-    def __count_occurrences(cls, file: BinaryIO) -> Tuple[dict, int]:
+    @staticmethod
+    def count_occurrences(file: BinaryIO) -> Tuple[dict, int]:
         """Counts the number of occurrences of bytes in a file.
 
         Positional arguments:
@@ -30,11 +31,11 @@ class Huffman:
 
     @classmethod
     def compress(cls, file: BinaryIO) -> None:
-        occurrences, total_bytes = cls.__count_occurrences(file)
+        occurrences, total_bytes = cls.count_occurrences(file)
         huffman_tree = HuffmanTree.from_occurrences(occurrences, total_bytes)
 
         compressed_file = None
 
     @classmethod
-    def restore(cls, file) -> None:
+    def restore(cls, file: BinaryIO) -> None:
         pass
