@@ -1,5 +1,6 @@
 from typing import BinaryIO
 import click
+from tiratiivistys.constants import EXTENSIONS
 from .huffman import Huffman
 from .lempel_ziv import LempelZiv
 
@@ -19,11 +20,14 @@ def command_line_interface(compress: bool,
                            file: BinaryIO) -> None:
     """Restore previously compressed FILE to original, or compress FILE."""
 
+    selected = algorithm.lower()
+    input_filename = file.name
+    output_filename = input_filename + EXTENSIONS[selected]
+
     verb = compress and 'Compressing' or 'Restoring'
     click.echo(
-        f"{verb} {file.name} using {algorithm}...")
+        f"{verb} {input_filename} into {output_filename} using {algorithm}...")
 
-    selected = algorithm.lower()
     operation = compress and "compress" or "restore"
     imports = {"huffman": Huffman, "lempel-ziv": LempelZiv}
 
