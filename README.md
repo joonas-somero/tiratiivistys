@@ -12,10 +12,11 @@
 >
 > * [Määrittelydokumentti](course/maarittelydokumentti.md)
 > * [Käyttöohje](course/kayttoohje.md)
+> * [Testausdokumentti](course/testausdokumentti.md)
 >
 >
 > ### Viikkoraportit
 >
 > * [Viikkoraportti 1](course/viikkoraportti1.md)
 > * [Viikkoraportti 2](course/viikkoraportti2.md)
-
+> * [Viikkoraportti 3](course/viikkoraportti3.md)
