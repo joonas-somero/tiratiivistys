@@ -1,7 +1,7 @@
 from typing import Self, Any, Generator, BinaryIO
 from tiratiivistys.constants import CODEWORD_LENGTH
 from tiratiivistys.classes import Encoder
-from tiratiivistys.lempel_ziv.window import SlidingWindow, WordWindow
+from tiratiivistys.lempel_ziv.window import SlidingWindow
 
 
 class EncodedRange:
