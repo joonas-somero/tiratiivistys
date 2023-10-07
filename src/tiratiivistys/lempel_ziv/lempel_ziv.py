@@ -16,13 +16,9 @@ class LempelZiv(Compressor):
         return LempelZivDecoder(file).decoder
 
     @classmethod
-    def compress(cls, file: BinaryIO) -> None:
-        encoder = cls.get_file_encoder(file)
-        filename = file.name + EXTENSIONS['lempel-ziv']
-        with open(filename, "wb") as compressed_file:
-            for codeword in encoder:
-                compressed_file.write(codeword)
+    def compress(cls, file: BinaryIO) -> bytes:
+        return cls.get_file_encoder(file)
 
     @classmethod
-    def restore(cls, file: BinaryIO) -> None:
-        pass
+    def restore(cls, file: BinaryIO) -> bytes:
+        return cls.get_file_decoder(file)

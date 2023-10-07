@@ -9,5 +9,6 @@ CODEWORD_LENGTH: Final[int] = 3
 # File extensions
 EXTENSIONS: Final[dict] = {
     "huffman": ".huffman",
-    "lempel-ziv": ".lempel-ziv"
+    "lempel-ziv": ".lempel-ziv",
+    "restore": ".restored"
 }

@@ -5,6 +5,12 @@ from .huffman import Huffman
 from .lempel_ziv import LempelZiv
 
 
+def write_output(filename: str, content: bytes) -> None:
+    with open(filename, "wb") as output_file:
+        for byte in content:
+            output_file.write(byte)
+
+
 @click.command()
 @click.option('--algorithm', '-a',
               required=True,
@@ -21,14 +27,20 @@ def command_line_interface(compress: bool,
     """Restore previously compressed FILE to original, or compress FILE."""
 
     selected = algorithm.lower()
+    operation = compress and "compress" or "restore"
+
     input_filename = file.name
-    output_filename = input_filename + EXTENSIONS[selected]
+    file_extension = (EXTENSIONS[selected]
+                      if compress
+                      else EXTENSIONS[operation])
+    output_filename = input_filename + file_extension
 
     verb = compress and 'Compressing' or 'Restoring'
     click.echo(
         f"{verb} {input_filename} into {output_filename} using {algorithm}...")
 
-    operation = compress and "compress" or "restore"
     imports = {"huffman": Huffman, "lempel-ziv": LempelZiv}
+    method = getattr(imports[selected], operation)
+    content = method(file)
 
-    getattr(imports[selected], operation)(file)
+    write_output(output_filename, content)

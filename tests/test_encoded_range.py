@@ -1,6 +1,6 @@
 import unittest
 from string import ascii_lowercase
-from tiratiivistys.lempel_ziv.encoder import EncodedRange
+from tiratiivistys.lempel_ziv.encoded_range import EncodedRange
 
 
 class TestEncodedRange(unittest.TestCase):
