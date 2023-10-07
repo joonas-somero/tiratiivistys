@@ -22,3 +22,4 @@
 > * [Viikkoraportti 2](course/viikkoraportti2.md)
 > * [Viikkoraportti 3](course/viikkoraportti3.md)
 > * [Viikkoraportti 4](course/viikkoraportti4.md)
+> * [Viikkoraportti 4](course/viikkoraportti5.md)
