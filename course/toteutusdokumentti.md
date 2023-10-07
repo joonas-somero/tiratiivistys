@@ -1,6 +1,12 @@
 # Toteutusdokumentti
 
-**Viikolla 4 alkavaan vertaisarviointiin mennessä ainoastaan komento `python -m tiratiivistys --algorithm lempel-ziv --compress <tiedoston nimi>` tekee mitään konkreettista. Komento `python -m tiratiivistys --algorithm huffman --compress <tiedoston nimi>` rakentaa muistiin Huffman-puun, mutta ei tee sillä mitään.**
+**Viikolla 5 alkavaan toiseen vertaisarviointiin mennessä ainoastaan komennot
+- `python -m tiratiivistys --algorithm lempel-ziv --compress <tiedoston nimi>`
+- `python -m tiratiivistys --algorithm lempel-ziv <edellisellä komenolla saadun tiedoston nimi>`
+
+ tekevät mitään konkreettista. Komento `python -m tiratiivistys --algorithm huffman --compress <tiedoston nimi>` rakentaa muistiin Huffman-puun, mutta ei tee sillä mitään.**
+
+Lisätietoa [käyttöohjeessa](kayttoohje.md).
 
 
 ## Ohjelman yleisrakenne
@@ -20,10 +26,10 @@ Ohjelman lähdekoodi löytyy hakemistosta `src/tiratiivistys/`, jonka sisältö 
       - `HuffmanTree`: Huffman-puun toteuttava luokka
 - `lempel_ziv/`: Lempel-Ziv LZ77-algoritmin toteuttava moduuli
     * `decoder.py`
-        - ~~`LempelZivDecoder`: Luokka LZ77-algoritmilla pakatun tiedoston palauttamiseen~~
+        - `LempelZivDecoder`: Luokka LZ77-algoritmilla pakatun tiedoston palauttamiseen
     * `encoder.py`
         - `EncodedRange`: LZ77-algoritmin käyttämiä kolmikkoja käsittelevä luokka
         - `LempelZivEncoder`: Luokka tiedoston pakkaamiseen LZ77-algoritmilla
     * `window.py`
         - `SlidingWindow`: LZ77-algoritmin _sliding window_ -tekniikan toteuttava luokka
-        - ~~`CodeWordWindow`: Kirjanpitoluokka LZ77-algoritmilla pakatun tiedoston palauttamiseen.~~
+        - `CodeWordWindow`: Kirjanpitoluokka LZ77-algoritmilla pakatun tiedoston palauttamiseen

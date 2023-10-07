@@ -21,17 +21,6 @@ Options:
   --help                          Show this message and exit.
 ```
 
+## Lisätietoa
 
-## Testit
-
-Testit suoritetaan komennolla `python -m unittest discover --verbose`.
-
-
-## Koodityyli
-
-Koodityylin voi tarkistaa komennolla `python -m pycodestyle .`.
-
-
-## Testikattavuus
-
-Rivikattavuus selviää komennolla `coverage run -m unittest discover`, haaraumakattavuus komennolla `coverage run --branch -m unittest discover`. Kattavuusraportti tulostuu komennolla `coverage report`.
+Toteutuksesta ja testauksesta löytyy lisätietoa [toteutus-](toteutusdokumentti.md) sekä [testausdokumentista](testausdokumentti.md).
