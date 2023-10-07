@@ -6,7 +6,7 @@ class SlidingWindow:
     def __init__(self,
                  file: BinaryIO,
                  encoder: Any,
-                 history_size: int = MAX_SIZE,
+                 history_size: int = MAX_SIZE-1,
                  buffer_size: int = MAX_SIZE) -> None:
         self.__file = file
         self.__encoder = encoder
@@ -45,6 +45,7 @@ class SlidingWindow:
             frame = buffer[start:start+match.length]
             f_start = start+1
             f_stop = h_length+match.length-1
+
             start = window.find(frame, f_start, f_stop)
         return match
 
@@ -77,3 +78,23 @@ class CodeWordWindow:
                  decoder: Any) -> None:
         self.__file = file
         self.__decoder = decoder
+        self.__history = bytearray()
+
+    def __decoded_range(self, codeword):
+        history = self.__history
+        offset, length, character = self.__decoder.decode(codeword)
+        start = len(history)
+        stop = start + length
+        for cursor in range(start, stop):
+            _character = history[cursor - offset]
+            history.append(_character)
+            yield _character
+        history.append(character)
+        yield character
+
+    @property
+    def characters(self):
+        file = self.__file
+        while codeword := file.read(CODEWORD_LENGTH):
+            for character in self.__decoded_range(codeword):
+                yield character
