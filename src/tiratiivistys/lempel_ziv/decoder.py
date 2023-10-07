@@ -1,16 +1,12 @@
-from typing import Self, Any, Generator, BinaryIO
+from typing import Self, Any, Generator
 from tiratiivistys.classes import Decoder
-from tiratiivistys.lempel_ziv.encoded_range import EncodedRange
-from tiratiivistys.lempel_ziv.window import CodeWordWindow
 
 
 class LempelZivDecoder(Decoder):
-    def __init__(self, file: BinaryIO) -> None:
-        self.__input = file
-        self.__window = CodeWordWindow(file, EncodedRange)
+    def __init__(self, window: Any) -> None:
+        self.__window = window
 
     @property
     def decoder(self) -> Generator:
-        window = self.__window
-        for character in window.characters:
+        for character in self.__window.characters:
             yield int.to_bytes(character)

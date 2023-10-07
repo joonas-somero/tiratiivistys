@@ -1,13 +1,10 @@
-from typing import Any, Generator, BinaryIO
+from typing import Any, Generator
 from tiratiivistys.classes import Encoder
-from tiratiivistys.lempel_ziv.encoded_range import EncodedRange
-from tiratiivistys.lempel_ziv.window import SlidingWindow
 
 
 class LempelZivEncoder(Encoder):
-    def __init__(self, file: BinaryIO) -> None:
-        self.__input = file
-        self.__window = SlidingWindow(file, EncodedRange)
+    def __init__(self, window: Any) -> None:
+        self.__window = window
 
     @property
     def encoder(self) -> Generator:
