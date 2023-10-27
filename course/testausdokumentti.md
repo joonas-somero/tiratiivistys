@@ -2,18 +2,8 @@
 
 ## Yksikkötestaus
 
-Testit suoritetaan komennolla `python -m unittest discover --verbose`. Testeihin lukeutuu mm.
+Testit suoritetaan komennolla `python -m unittest discover --verbose`.
 
-* EncodedRange
-    - test_decode_returns_appropriate_object
-    - test_decode_returns_none_for_wrong_codeword_length
-    - test_encode_returns_appropriate_object_if_frame_matches
-    - test_encode_returns_none_if_frame_does_not_match
-    - test_literal_returns_appropriate_object
-* Huffman
-    - test_count_occurrences_returns_correct_total
-* LempelZiv
-    - test_restore
 
 ### Testikattavuus
 
