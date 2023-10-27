@@ -1,12 +1,12 @@
 from typing import Self
+from tiratiivistys.classes import Matcher
 from tiratiivistys.constants import CODEWORD_LENGTH
 
 
-class EncodedRange:
+class EncodedRange(Matcher):
     """A class for holding a range of matching strings of bytes and
     classmethods for encoding and decoding codewords.
     """
-
     def __init__(self,
                  offset: int = 0,
                  length: int = 0,
@@ -28,7 +28,7 @@ class EncodedRange:
         return bytes([self.offset, self.length, self.character])
 
     @classmethod
-    def literal(cls, character) -> Self:
+    def literal(cls, character: int) -> Self:
         """A classmethod for encoding a literal character."""
         return cls(character=character)
 

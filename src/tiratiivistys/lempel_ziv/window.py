@@ -1,11 +1,15 @@
-from typing import Any, BinaryIO
+from typing import BinaryIO, Generator
+from tiratiivistys.classes import Matcher, Window
 from tiratiivistys.constants import MAX_SIZE, CODEWORD_LENGTH
 
 
-class SlidingWindow:
+class SlidingWindow(Window):
+    """Implements the sliding window technique used by
+    the LZ77 algorithm.
+    """
     def __init__(self,
                  file: BinaryIO,
-                 encoder: Any,
+                 encoder: Matcher,
                  history_size: int = MAX_SIZE-1,
                  buffer_size: int = MAX_SIZE) -> None:
         self.__file = file
@@ -18,11 +22,7 @@ class SlidingWindow:
         self.__read_input()
 
     @property
-    def has_input(self) -> bool:
-        return len(self.__buffer) > 0
-
-    @property
-    def match(self) -> Any:
+    def __match(self) -> Matcher:
         history, buffer, window, encoder = (self.__history,
                                             self.__buffer,
                                             self.__window,
@@ -65,22 +65,29 @@ class SlidingWindow:
     def __discardleft(self, length: int) -> None:
         del self.__history[:length]
 
-    def slide(self, length: int) -> None:
+    def __slide(self, length: int) -> None:
         if self.__history_size - len(self.__history) < length:
             self.__discardleft(length)
         self.__history.extend(self.__popleft(length))
         self.__read_input()
 
+    @property
+    def output(self) -> Generator:
+        while self.__buffer:
+            match = self.__match
+            self.__slide(match.length+1)
+            yield match
 
-class CodeWordWindow:
+
+class CodeWordWindow(Window):
     def __init__(self,
                  file: BinaryIO,
-                 decoder: Any) -> None:
+                 decoder: Matcher):
         self.__file = file
         self.__decoder = decoder
         self.__history = bytearray()
 
-    def __decoded_range(self, codeword):
+    def __decoded_range(self, codeword: bytes) -> Generator:
         history = self.__history
         offset, length, character = self.__decoder.decode(codeword)
         start = len(history)
@@ -93,7 +100,7 @@ class CodeWordWindow:
         yield character
 
     @property
-    def characters(self):
+    def output(self) -> Generator:
         file = self.__file
         while codeword := file.read(CODEWORD_LENGTH):
             for character in self.__decoded_range(codeword):
