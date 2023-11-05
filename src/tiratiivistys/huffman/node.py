@@ -1,29 +1,23 @@
 from typing import Self
+
 from tiratiivistys.classes import Node
 
 
 class HuffmanNode(Node):
-    """A class for holding a node of the Huffman-tree."""
+    """A class for holding a Huffman-tree node."""
 
-    def __init__(self, value: bytes = None) -> None:
+    def __init__(self, value: bytes | None = None) -> None:
         self.value = value
         self.parent = None
         self.left_child = None
         self.right_child = None
 
-    def __repr__(self):
-        value = self.value if self.is_leaf else ''
-        return f"{self.__class__.__name__}({value})"
-
-    def __str__(self):
-        return f"L: {self.value}" if self.is_leaf else "N"
-
     @property
-    def edge(self) -> int | None:
+    def edge(self) -> bool | None:
         if self.is_root:
             return None
         else:
-            return 0 if self.parent.left_child is self else 1
+            return self.parent.right_child is self
 
     @property
     def is_root(self) -> bool:
@@ -33,8 +27,11 @@ class HuffmanNode(Node):
     def is_leaf(self) -> bool:
         return self.value is not None
 
-    def get_child(self, edge: bytes) -> Self:
-        return self.left_child if edge == b"0" else self.right_child
+    def get_child(self, edge: bool | None) -> Self | None:
+        if edge is not None:
+            return self.right_child if edge else self.left_child
+        else:
+            return None
 
     def reproduce(self) -> None:
         self.left_child = HuffmanNode()

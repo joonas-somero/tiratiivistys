@@ -1,35 +1,35 @@
-from typing import Self, BinaryIO, Generator
 from collections import deque
-from tiratiivistys.classes import Tree
-from .node import HuffmanNode
-from .node_queue import NodeQueue
+from typing import Self, BinaryIO, Generator
+
+from tiratiivistys.classes import Tree, Reader, Weight
+from tiratiivistys.huffman.node import HuffmanNode as Node
+from tiratiivistys.huffman.node_queue import NodeQueue
 
 
 class HuffmanTree(Tree):
     """A class for constructing Huffman-trees."""
 
-    def __init__(self, root: Self, leaves: dict = None) -> None:
+    def __init__(self, root: Node, leaves: dict | None = None) -> None:
         self.root = root
         self.__leaves = leaves
 
-    def __str__(self):
-        return "\n".join("  " * depth + str(node)
-                         for node, depth
-                         in self.nodes)
-
     @property
-    def nodes(self) -> Generator:
-        stack = deque([(self.root, 0)])
-        while stack and (item := stack.pop()):
-            node, depth = item
-            yield node, depth
-            depth += 1
-            if node.right_child:
-                stack.append((node.right_child, depth))
-            if node.left_child:
-                stack.append((node.left_child, depth))
+    def nodes(self) -> Generator[Node, None, None]:
+        """ Traverses the tree yielding it's nodes."""
+        stack = deque([self.root])
+        while stack and (node := stack.pop()):
+            yield node
+            if node.right_child is not None:
+                stack.append(node.right_child)
+            if node.left_child is not None:
+                stack.append(node.left_child)
 
-    def path_to(self, byte: bytes) -> tuple:
+    def path_to(self, byte: bytes) -> tuple[bool] | None:
+        """Finds a path to a leaf from the root.
+        Only available when leaves are passed to constructor.
+        """
+        if self.__leaves is None:
+            return None
         path = []
         node = self.__leaves[byte]
         while not node.is_root:
@@ -38,54 +38,53 @@ class HuffmanTree(Tree):
         return tuple(reversed(path))
 
     @staticmethod
-    def __count_occurrences(file: BinaryIO) -> list[tuple]:
-        """Counts the number of occurrences for bytes in a file
-        and moves the cursor back to the beginning.
+    def __count_occurrences(input_file: BinaryIO) -> Weight:
+        """(Private)
+        Counts the number of occurrences for bytes in 'input_file'
+        and moves the file cursor back to the beginning.
 
         Positional arguments:
-            file: A binary I/O stream.
+            input_file: A readable binary I/O stream.
         Returns:
             A list of tuples of the form (byte, occurrences).
         """
         occurrences = {}
-        while byte := file.read(1):
+        while byte := input_file.read(1):
             occurrences[byte] = (occurrences[byte] + 1
                                  if byte in occurrences
                                  else 1)
-        file.seek(0)
-        return occurrences.items()
+        input_file.seek(0)
+        return [Weight(byte, weight) for byte, weight in occurrences.items()]
 
     @classmethod
-    def from_input(cls, file: BinaryIO) -> Self:
+    def from_input_file(cls, input_file: BinaryIO) -> Self:
         """Constructs a Huffman-tree from an input file.
 
         Positional arguments:
-            file: A binary I/O stream.
+            input_file: A readable binary I/O stream.
         Returns:
-            An instance of class HuffmanTree.
+            An instance of the class HuffmanTree (with 'path_to' available).
         """
-        leaf_occurrences = cls.__count_occurrences(file)
-        tree_builder = NodeQueue(leaf_occurrences, HuffmanNode)
+        leaf_occurrences = cls.__count_occurrences(input_file)
+        tree_builder = NodeQueue(leaf_occurrences, Node)
         root = tree_builder.root
         leaves = tree_builder.leaves
         return cls(root, leaves)
 
     @classmethod
-    def from_encoded(cls, file: BinaryIO) -> Self:
-        """Recreates a Huffman-tree from an encoded representation
-        in a file and does not move the cursor after.
+    def from_encoded_data(cls, encoded_data: Reader) -> Self:
+        """Recreates a Huffman-tree from an encoded representation.
 
         Positional arguments:
-            file: A binary I/O stream.
+            encoded_data: The compressed data as a Reader object.
         Returns:
-            An instance of class HuffmanTree.
+            An instance of the class HuffmanTree.
         """
-        root = HuffmanNode()
+        root = Node()
         stack = deque([root])
         while stack and (node := stack.pop()):
-            bit = file.read(1)
-            if bit == b"1":
-                node.value = file.read(1)
+            if encoded_data.bit:
+                node.value = encoded_data.literal
             else:
                 node.reproduce()
                 stack.extend([node.right_child, node.left_child])

@@ -7,19 +7,28 @@ Projektin riippuvuuksia hallitaan Poetryn avulla, mutta ohjelman suorituksessa k
 
 ## Click
 
-Click luo automaattisesti ohjelman komennolla `python -m tiratiivistys --help` tulostaman käyttöohjeen:
+Click luo automaattisesti ohjelman komennolla `poetry run python -m tiratiivistys --help` tulostaman käyttöohjeen:
 
 ```text
-Usage: python -m tiratiivistys [OPTIONS] FILE
+Usage: python -m tiratiivistys [OPTIONS] INPUT_FILE OUTPUT_FILE
 
-  Restore previously compressed FILE to original, or compress FILE.
+  Compress or restore INPUT_FILE into OUTPUT_FILE, overwriting existing
+  OUTPUT_FILE.
 
 Options:
-  -a, --algorithm [huffman|lempel-ziv]
-                                  compression algorithm to use  [required]
-  -c, --compress                  compress FILE
+  -c, --compress / -r, --restore  operation  [required]
+  -a, --algorithm [Huffman|Lempel-Ziv]
+                                  compression algorithm (case insensitive)
+                                  [required]
   --help                          Show this message and exit.
 ```
+
+Esimerkiksi tiedoston _big\_band.ensemble_ pakkaaminen tiedostoon _quartet.ensemble_ onnistuu _Lempel-Ziv_-algoritmia käyttäen komennolla
+
+```bash
+poetry run python -m tiratiivistys -ca lempel-ziv big_band.ensemble quartet.ensemble
+```
+
 
 ## Lisätietoa
 

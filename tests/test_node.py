@@ -1,5 +1,6 @@
 import unittest
 from random import randbytes
+
 from tiratiivistys.huffman.node import HuffmanNode
 
 
@@ -21,7 +22,8 @@ class TestHuffmanNode(unittest.TestCase):
         self.assertIsNone(result)
         left_result = self.root.left_child.edge
         right_result = self.root.right_child.edge
-        self.assertListEqual([0, 1], [left_result, right_result])
+        self.assertFalse(left_result)
+        self.assertTrue(right_result)
 
     def test_is_leaf(self):
         result = self.root.is_leaf
@@ -30,11 +32,11 @@ class TestHuffmanNode(unittest.TestCase):
         self.assertTrue(result)
 
     def test_get_child(self):
-        left_byte = b"0"
-        right_byte = b"1"
-        result = self.root.get_child(left_byte)
+        left_bit = False
+        right_bit = True
+        result = self.root.get_child(left_bit)
         self.assertEqual(result, self.root.left_child)
-        result = self.root.get_child(right_byte)
+        result = self.root.get_child(right_bit)
         self.assertEqual(result, self.root.right_child)
 
     def test_reproduce(self):

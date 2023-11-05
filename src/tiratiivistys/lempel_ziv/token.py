@@ -1,12 +1,14 @@
 from typing import Self
-from tiratiivistys.classes import Matcher
-from tiratiivistys.constants import CODEWORD_LENGTH
+
+from tiratiivistys.classes import Token
+from tiratiivistys.constants import TOKEN_LENGTH, LITERAL_LENGTH
 
 
-class EncodedRange(Matcher):
+class LempelZivToken(Token):
     """A class for holding a range of matching strings of bytes and
     classmethods for encoding and decoding codewords.
     """
+
     def __init__(self,
                  offset: int = 0,
                  length: int = 0,
@@ -15,17 +17,15 @@ class EncodedRange(Matcher):
         self.length = length
         self.character = character
 
-    def __getitem__(self, key):
+    def __getitem__(self, key: int | slice) -> int | list[int]:
         return [self.offset, self.length, self.character][key]
 
-    def __repr__(self):
-        return ("EncodedRange(" +
-                f"offset={self.offset}, "
-                f"length={self.length}, "
-                f"character={self.character})")
-
-    def __bytes__(self):
+    def __bytes__(self) -> bytes:
         return bytes([self.offset, self.length, self.character])
+
+    @property
+    def is_token(self) -> bool:
+        return not self.offset == self.length == 0
 
     @classmethod
     def literal(cls, character: int) -> Self:
@@ -35,11 +35,14 @@ class EncodedRange(Matcher):
     @classmethod
     def decode(cls, codeword: bytes) -> Self | None:
         """A classmethod for decoding a codeword into
-        an EncodedRange object.
+        an LempelZivToken object.
         """
-        return (cls(*codeword)
-                if len(codeword) == CODEWORD_LENGTH
-                else None)
+        if len(codeword) == TOKEN_LENGTH:
+            return cls(*codeword)
+        elif len(codeword) == LITERAL_LENGTH:
+            return cls.literal(int.from_bytes(codeword))
+        else:
+            return None
 
     @classmethod
     def encode(cls,
@@ -48,7 +51,7 @@ class EncodedRange(Matcher):
                history: bytearray,
                buffer: bytearray) -> Self | None:
         """A classmethod for matching a frame in window, i.e.
-        history+buffer, and constructing an EncodedRange object
+        history+buffer, and constructing a LempelZivToken
         if frame matches the corresponding frame in buffer.
         """
         frame_length = len(frame)

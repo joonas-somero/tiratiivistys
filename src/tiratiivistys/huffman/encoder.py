@@ -1,29 +1,31 @@
-from typing import Generator, BinaryIO
-from itertools import chain
-from tiratiivistys.classes import Encoder, Tree
-from collections import deque
+from typing import BinaryIO, Callable
+
+from tiratiivistys.classes import Model
+from tiratiivistys.bit_io import BitWriter as Writer
+from tiratiivistys.huffman.tree import HuffmanTree as Tree
 
 
-class HuffmanEncoder(Encoder):
-    def __init__(self, file: BinaryIO, tree: Tree) -> None:
-        self.__file = file
-        self.__tree = tree
+class HuffmanEncoder(Model):
+    def __init__(self, input_file: BinaryIO) -> None:
+        self.__input_file = input_file
+        self.__tree = Tree.from_input_file(input_file)
+        self.__writer = Writer()
 
-    @property
-    def __encoded_tree(self) -> Generator:
-        for node, _ in self.__tree.nodes:
-            yield (b"1" + node.value
-                   if node.is_leaf
-                   else b"0")
+    def __encode_tree(self) -> None:
+        for node in self.__tree.nodes:
+            self.__writer.bit(node.is_leaf)
+            node.is_leaf and self.__writer.byte(node.value)
 
-    @property
-    def __encoded_data(self) -> Generator:
-        out = ""
-        while byte := self.__file.read(1):
+    def __encode_data(self) -> None:
+        while byte := self.__input_file.read(1):
             for edge in self.__tree.path_to(byte):
-                yield bytes(str(edge), encoding="utf-8")
+                self.__writer.bit(edge)
+
+    def __to_file(self, output_file: BinaryIO) -> None:
+        self.__writer.write_to(output_file, True)
 
     @property
-    def encoder(self) -> Generator:
-        return chain(self.__encoded_tree,
-                     self.__encoded_data)
+    def executor(self) -> Callable[[BinaryIO], None]:
+        self.__encode_tree()
+        self.__encode_data()
+        return lambda f: self.__to_file(f)

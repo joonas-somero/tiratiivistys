@@ -1,10 +1,11 @@
-from itertools import count
 import heapq
-from tiratiivistys.classes import Node
+from itertools import count
+
+from tiratiivistys.classes import Node, Weight
 
 
 class NodeQueue:
-    def __init__(self, weights: tuple, Node: Node) -> None:
+    def __init__(self, weights: list[Weight], Node: Node) -> None:
         self.__Node = Node
         self.__counter = count()
         self.__pq = [(weight, self.__tiebreaker, self.__Node(byte))
