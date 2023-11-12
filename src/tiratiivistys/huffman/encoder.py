@@ -1,7 +1,7 @@
 from typing import BinaryIO, Callable
 
 from tiratiivistys.classes import Model
-from tiratiivistys.bit_io import BitWriter as Writer
+from tiratiivistys.huffman.io import HuffmanWriter as Writer
 from tiratiivistys.huffman.tree import HuffmanTree as Tree
 
 
@@ -22,7 +22,7 @@ class HuffmanEncoder(Model):
                 self.__writer.bit(edge)
 
     def __to_file(self, output_file: BinaryIO) -> None:
-        self.__writer.write_to(output_file, True)
+        self.__writer.write_to(output_file)
 
     @property
     def executor(self) -> Callable[[BinaryIO], None]:

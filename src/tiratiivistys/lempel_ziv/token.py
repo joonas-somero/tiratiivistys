@@ -1,53 +1,24 @@
 from typing import Self
 
-from tiratiivistys.classes import Token
-from tiratiivistys.constants import TOKEN_LENGTH, LITERAL_LENGTH
+from tiratiivistys.constants import N_BITS
+from tiratiivistys.classes import Codeword, Token
 
 
 class LempelZivToken(Token):
-    """A class for holding a range of matching strings of bytes and
-    classmethods for encoding and decoding codewords.
-    """
+    """A class for encoding a string of bytes into an offset and a length."""
 
-    def __init__(self,
-                 offset: int = 0,
-                 length: int = 0,
-                 character: int = 0) -> None:
+    def __init__(self, offset: int, length: int) -> None:
         self.offset = offset
         self.length = length
-        self.character = character
-
-    def __getitem__(self, key: int | slice) -> int | list[int]:
-        return [self.offset, self.length, self.character][key]
-
-    def __bytes__(self) -> bytes:
-        return bytes([self.offset, self.length, self.character])
 
     @property
-    def is_token(self) -> bool:
-        return not self.offset == self.length == 0
-
-    @classmethod
-    def literal(cls, character: int) -> Self:
-        """A classmethod for encoding a literal character."""
-        return cls(character=character)
-
-    @classmethod
-    def decode(cls, codeword: bytes) -> Self | None:
-        """A classmethod for decoding a codeword into
-        an LempelZivToken object.
-        """
-        if len(codeword) == TOKEN_LENGTH:
-            return cls(*codeword)
-        elif len(codeword) == LITERAL_LENGTH:
-            return cls.literal(int.from_bytes(codeword))
-        else:
-            return None
+    def codeword(self) -> Codeword:
+        return Codeword(self.offset, self.length)
 
     @classmethod
     def encode(cls,
                start: int,
-               frame: bytearray,
+               frame: bytes,
                history: bytearray,
                buffer: bytearray) -> Self | None:
         """A classmethod for matching a frame in window, i.e.
@@ -55,11 +26,23 @@ class LempelZivToken(Token):
         if frame matches the corresponding frame in buffer.
         """
         frame_length = len(frame)
-        history_length = len(history)
-        offset = history_length - start
-        character = buffer[frame_length]
-        buffer_frame = buffer[:frame_length]
+        offset = len(history) - start
+        buffer_frame = buffer[:len(frame)]
 
-        return (cls(offset, frame_length, character)
-                if frame == buffer_frame
+        return (cls(offset, frame_length)
+                if frame == buffer_frame and offset > 0
                 else None)
+
+    @classmethod
+    def codeword_length(cls, token: bytes | Codeword) -> int:
+        """Returns the encoded length of the token measured in bits."""
+        if cls.is_token(token):
+            # prefix + offset + length
+            return 1 + N_BITS + N_BITS
+        else:
+            # prefix + value
+            return 1 + 8
+
+    @staticmethod
+    def is_token(token: bytes | Codeword) -> bool:
+        return not isinstance(token, bytes)

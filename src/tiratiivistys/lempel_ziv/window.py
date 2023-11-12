@@ -1,33 +1,30 @@
 from typing import BinaryIO, Generator
 
-from tiratiivistys.classes import Token, Window
-from tiratiivistys.constants import MAX_SIZE, TOKEN_LENGTH, LITERAL_LENGTH
+from tiratiivistys.classes import Codeword, Window
+from tiratiivistys.constants import MAX_HISTORY, MAX_BUFFER
+from tiratiivistys.lempel_ziv.token import LempelZivToken as Token
 
 
 class SlidingWindow(Window):
-    """Implements the sliding window technique used by
+    """Implements the sliding window technique used in
     the LZ77 algorithm.
     """
 
     def __init__(self,
                  input_file: BinaryIO,
-                 encoder: Token,
-                 history_size: int = MAX_SIZE-1,
-                 buffer_size: int = MAX_SIZE) -> None:
+                 encoder: Token) -> None:
         self.__input_file = input_file
         self.__encoder = encoder
-        self.__history_size = history_size
-        self.__buffer_size = buffer_size
         self.__history = bytearray()
         self.__buffer = bytearray()
         self.__window = self.__new_window()
         self.__read_input()
 
     def __new_window(self) -> bytearray:
-        return self.__history + self.__buffer
+        return bytes(self.__history + self.__buffer)
 
     def __read_input(self) -> None:
-        bytes_free = self.__buffer_size - len(self.__buffer)
+        bytes_free = MAX_BUFFER - len(self.__buffer)
         self.__buffer.extend(self.__input_file.read(bytes_free))
         self.__window = self.__new_window()
 
@@ -40,7 +37,7 @@ class SlidingWindow(Window):
         del self.__history[:count]
 
     def __slide(self, count: int) -> None:
-        if self.__history_size - len(self.__history) < count:
+        if MAX_HISTORY - len(self.__history) < count:
             self.__discardleft(count)
         self.__history.extend(self.__popleft(count))
         self.__read_input()
@@ -50,11 +47,13 @@ class SlidingWindow(Window):
         frame = self.__buffer[buffer_slice]
         return self.__window.find(frame,
                                   start+1,
-                                  len(self.__history)-1 + match.length)
+                                  len(self.__history) + match.length)
 
     def __find_longer(self, start: int, current: Token) -> Token:
         match = current
-        stop = start + match.length+1
+        stop = start + (match.length+1
+                        if Token.is_token(match)
+                        else 1)
         while stop < len(self.__buffer):
             next_match = self.__encoder.encode(start,
                                                self.__window[start:stop],
@@ -69,49 +68,61 @@ class SlidingWindow(Window):
 
     @property
     def __cursor(self):
-        return self.__buffer[0]
+        return bytes(self.__buffer[0:1])
 
     @property
     def __longest_match(self) -> Token:
-        literal = self.__encoder.literal(self.__cursor)
-        start = self.__history.find(self.__cursor)
+        literal = self.__cursor
         match = literal
+        start = self.__history.find(self.__cursor)
         while -1 < start < len(self.__buffer)-2:
             match = self.__find_longer(start, match)
             start = self.__next_start(start, match)
-        return (match
-                if match.length >= TOKEN_LENGTH
-                else literal)
+        if match is literal:
+            return literal
+        elif (Token.codeword_length(match)
+              > Token.codeword_length(literal) * match.length):
+            return literal
+        else:
+            return match
 
     @property
     def output(self) -> Generator[Token, None, None]:
         while self.__buffer:
             match = self.__longest_match
-            self.__slide(match.length+1)
+            self.__slide(match.length
+                         if Token.is_token(match)
+                         else 1)
             yield match
 
 
 class TokenWindow(Window):
+    """Class for decoding tokens in compressed data."""
+
     def __init__(self,
-                 compressed_data: Generator[bytes, None, None],
+                 compressed_data: Generator[Codeword, None, None],
                  decoder: Token) -> None:
         self.__input_data = compressed_data
         self.__decoder = decoder
-        self.__history = bytearray()
+        self.__history = []
 
-    def __decoded_range(self, codeword: bytes) -> Generator[int, None, None]:
-        offset, length, character = self.__decoder.decode(codeword)
-        start = len(self.__history)
-        stop = start + length
-        for cursor in range(start, stop):
-            _character = self.__history[cursor - offset]
-            self.__history.append(_character)
-            yield _character
-        self.__history.append(character)
-        yield character
+    def __decoded_token(self,
+                        token: bytes | Codeword
+                        ) -> Generator[bytes, None, None]:
+        if Token.is_token(token):
+            start = len(self.__history)
+            stop = start + token.length
+            for cursor in range(start, stop):
+                index = cursor - token.offset
+                character = self.__history[index]
+                self.__history.append(character)
+                yield character
+        else:
+            self.__history.append(token)
+            yield token
 
     @property
-    def output(self) -> Generator[int, None, None]:
+    def output(self) -> Generator[bytes, None, None]:
         for codeword in self.__input_data:
-            for character in self.__decoded_range(codeword):
+            for character in self.__decoded_token(codeword):
                 yield character

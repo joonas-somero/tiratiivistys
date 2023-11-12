@@ -1,82 +1,51 @@
-from typing import BinaryIO
+from typing import BinaryIO, Callable
 
-from bitstring import ConstBitStream, BitArray, Bits
+from bitstring import ConstBitStream, BitArray
 from bitstring.exceptions import ReadError
 
-from tiratiivistys.classes import Reader, Writer
-from tiratiivistys.constants import TOKEN_LENGTH, LITERAL_LENGTH
+from tiratiivistys.classes import Codeword, Reader, Writer
 
 
 class BitReader(Reader):
-    def __init__(self,
-                 input_file: BinaryIO,
-                 padded: bool | None = False) -> None:
-        padding, offset = ((None, None)
-                           if not padded
-                           else (int.from_bytes(input_file.read(1)), 8))
-        self.__stream = ConstBitStream(filename=input_file.name,
-                                       offset=offset)
-        self.__max_pos = (len(self.__stream)
-                          if not padded
-                          else len(self.__stream) - padding)
+    def __init__(self, input_file: BinaryIO, offset: int = 0) -> None:
+        self._stream = ConstBitStream(filename=input_file.name,
+                                      offset=offset)
+        self._max_pos = len(self._stream)
 
-    @property
-    def __pos(self):
-        return self.__stream.pos
-
-    def __read(self, fmt: str) -> bool | bytes | None:
+    def _read(self,
+              method: type(ConstBitStream.read)
+              | type(ConstBitStream.readlist),
+              fmt: str | list[str]) -> bool | bytes | Codeword | None:
         try:
-            value = self.__stream.read(fmt)
-            if self.__pos > self.__max_pos:
+            value = method(fmt)
+            if self._stream.pos > self._max_pos:
                 raise ReadError
             return value
         except ReadError:
             return None
 
     @property
-    def bit(self) -> bool | None:
-        return self.__read("bool")
+    def next_bit(self) -> bool | None:
+        method = self._stream.read
+        fmt = "bool"
+        return self._read(method, fmt)
 
     @property
-    def literal(self) -> bytes | None:
-        return self.__read(f"bytes:{LITERAL_LENGTH}")
-
-    @property
-    def token(self) -> bytes | None:
-        return self.__read(f"bytes:{TOKEN_LENGTH}")
+    def next_byte(self) -> bytes | None:
+        method = self._stream.read
+        fmt = "bytes:1"
+        return self._read(method, fmt)
 
 
 class BitWriter(Writer):
     def __init__(self) -> None:
-        self.__buffer = BitArray()
+        self._buffer = BitArray()
 
-    @property
-    def __padding(self) -> int:
-        remainder = len(self.__buffer) % 8
-        padding_length = (8 - remainder) % 8
-        return int.to_bytes(padding_length)
-
-    def write_to(self,
-                 output_file: BinaryIO,
-                 padded: bool | None = False) -> None:
-        """Writes the contents of the buffer into 'output_file'. If
-        'padded' is True, the first byte will contain the length of the
-        padding. Regardless, if stream is not byte-aligned, padding is
-        appended to the file.
-
-        Positional arguments:
-            output_file: A writable binary I/O stream.
-            padded: Boolean (defaults to False)
-        """
-        if padded:
-            output_file.write(self.__padding)
-        self.__buffer.tofile(output_file)
+    def write_to(self, output_file: BinaryIO) -> None:
+        self._buffer.tofile(output_file)
 
     def bit(self, bit: bool) -> None:
-        self.__buffer.append(Bits(bool=bit))
+        self._buffer.append([bit])
 
     def byte(self, byte: bytes) -> None:
-        self.__buffer.append(Bits(bytes=byte))
-
-    def token(self, token: bytes) -> None:
-        self.__buffer.append(Bits(bytes=token))
+        self._buffer.append(byte[0:1])

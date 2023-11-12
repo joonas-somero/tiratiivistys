@@ -1,11 +1,10 @@
 from typing import Final
+from math import log2, floor
 
 
-# Number of loci addressable using a single byte
-MAX_SIZE: Final[int] = 256
+MAX_OFFSET: Final[int] = (2**12)-1
+MAX_HISTORY: Final[int] = MAX_OFFSET
+MAX_BUFFER: Final[int] = MAX_HISTORY // 4
 
-# One byte for each in ( offset, length, character )
-TOKEN_LENGTH: Final[int] = 3
-
-# A single byte
-LITERAL_LENGTH: Final[int] = 1
+# Number of bits needed to encode the offset or length of a Lempel-Ziv token
+N_BITS = floor(log2(MAX_OFFSET)) + 1

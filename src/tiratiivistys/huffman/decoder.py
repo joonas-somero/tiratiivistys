@@ -1,14 +1,14 @@
 from typing import BinaryIO, Generator, Callable
 
 from tiratiivistys.classes import Model
-from tiratiivistys.bit_io import BitReader as Reader
+from tiratiivistys.huffman.io import HuffmanReader as Reader
 from tiratiivistys.huffman.tree import HuffmanTree as Tree
 
 
 class HuffmanDecoder(Model):
     def __init__(self, compressed_file: BinaryIO) -> None:
         self.__compressed_file = compressed_file
-        self.__reader = Reader(compressed_file, True)
+        self.__reader = Reader(compressed_file)
 
     @property
     def __decoded(self) -> Generator[bytes, None, None]:
@@ -19,7 +19,7 @@ class HuffmanDecoder(Model):
                 yield node.value
                 node = root
             else:
-                edge = self.__reader.bit
+                edge = self.__reader.next_bit
                 node = node.get_child(edge)
 
     def __to_file(self, output_file: BinaryIO) -> None:

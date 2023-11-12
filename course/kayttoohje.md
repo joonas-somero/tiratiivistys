@@ -1,13 +1,21 @@
 # Käyttöohje
 
+>Dokumentaatiossa esitellyt komennot olettavat suorituksen tapahtuvan Poetryn luomassa virtuaaliympäristössä.
+
+
 ## Poetry
 
-Projektin riippuvuuksia hallitaan Poetryn avulla, mutta ohjelman suorituksessa käytetään ainoastaan _Click_-pakkausta lukuunottamatta Pythonin sisäänrakennettuja moduuleja. Lisäksi Poetryllä on asennettu testikattavuuden seuraamiseen _Coverage.py_, sekä koodityylin automaattiseen korjaamiseen _autopep8_. Ts., mikäli Click on saatavilla jotakin toista kautta, ei Poetryä tarvita ohjelman suorittamiseen. Sama pätee Coverageen testikattavuusraportin osalta.
+Projektin riippuvuuksia hallitaan _Poetry_-työkalun avulla. Projekti käyttää pakkauksia
+
+- _click_
+- _bitstring_
+- _autopep8_
+- _coverage_
 
 
 ## Click
 
-Click luo automaattisesti ohjelman komennolla `poetry run python -m tiratiivistys --help` tulostaman käyttöohjeen:
+Click luo automaattisesti ohjelman komennolla `python -m tiratiivistys --help` tulostaman käyttöohjeen:
 
 ```text
 Usage: python -m tiratiivistys [OPTIONS] INPUT_FILE OUTPUT_FILE
@@ -26,10 +34,22 @@ Options:
 Esimerkiksi tiedoston _big\_band.ensemble_ pakkaaminen tiedostoon _quartet.ensemble_ onnistuu _Lempel-Ziv_-algoritmia käyttäen komennolla
 
 ```bash
-poetry run python -m tiratiivistys -ca lempel-ziv big_band.ensemble quartet.ensemble
+python -m tiratiivistys --compress -algorithm Lempel-Ziv big_band.ensemble quartet.ensemble
+```
+
+Tai hieman lyhyemmin
+
+```bash
+python -m tiratiivistys -ca lempel-ziv big_band.ensemble quartet.ensemble
+```
+
+Vastaavasti esim. Huffman-koodausta käyttäen pakatun tiedoston _skiff.boat_ palauttaminen tiedostoksi _yacht.boat_ tapahtuu komennolla
+
+```bash
+python -m tiratiivistys -ra huffman skiff.boat yacht.boat
 ```
 
 
 ## Lisätietoa
 
-Toteutuksesta ja testauksesta löytyy lisätietoa [toteutus-](toteutusdokumentti.md) sekä [testausdokumentista](testausdokumentti.md).
+Mm. suorituskyky- ja yksikkötestaus on kuvailtu [testausdokumentissa](testausdokumentti.md). Ohjelman yleisrakenne ja suorituskykyvertailu löytyvät puolestaan [toteutusdokumentista](toteutusdokumentti.md).

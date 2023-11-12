@@ -83,8 +83,8 @@ class HuffmanTree(Tree):
         root = Node()
         stack = deque([root])
         while stack and (node := stack.pop()):
-            if encoded_data.bit:
-                node.value = encoded_data.literal
+            if encoded_data.next_bit:
+                node.value = encoded_data.next_byte
             else:
                 node.reproduce()
                 stack.extend([node.right_child, node.left_child])

@@ -1,8 +1,25 @@
 # Testausdokumentti
 
+## Suorituskykytestaus
+
+Algoritmien toteutuksien suorituskykyä tiedoston pakkaamisessa on vertailtu repositorion juuresta löytyvän tiedoston [_compare.py_](../compare.py) sisältämällä Python-skriptillä.
+
+```bash
+$ python compare.py
+```
+
+```text
+Fetching 'Alice's Adventures in Wonderland' from www.gutenberg.org...
+Fetching 'Kalevala' from www.gutenberg.org...
+...
+```
+
+Skripti noutaa verkosta luonnollista kieltä sisältävää materiaalia, pakkaa sen käyttäen vertailtavia algoritmejä ja kirjoittaa vertailun tulokset tiedostoon. Skriptin sisältämien vakioiden &ndash; `BOOKS` ja `SUPPLEMENTAL` &ndash; esimerkkisisällöllä saadun vertailun tulokset on esitelty toteutusdokumentin kohdassa [_Suorituskykyvertailu_](toteutusdokumentti.md#suorituskykyvertailu).
+
+
 ## Yksikkötestaus
 
-Testit suoritetaan komennolla `python -m unittest discover --verbose`.
+Hakemistosta [_tests_](../tests/) löytyvät yksikkötestit suoritetaan komennolla `python -m unittest discover --verbose`.
 
 
 ### Testikattavuus

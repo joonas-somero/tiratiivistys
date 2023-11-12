@@ -24,7 +24,7 @@ Ohjelmalle annetaan syötteeksi joko häviöttömästi pakattava tiedosto tai pa
 
 ## Taivoiteltavat aika- ja tilavaativuudet
 
-Tarkentuvat myöhemmin.
+...
 
 
 ## Lähteet

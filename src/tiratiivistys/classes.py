@@ -2,33 +2,41 @@ from abc import ABC, abstractmethod
 from typing import Self, Generator, BinaryIO, Callable, NamedTuple
 
 
+class Weight(NamedTuple):
+    value: bytes
+    weight: int
+
+
+class Codeword(NamedTuple):
+    offset: int
+    length: int
+
+
 class Reader(ABC):
-    """Reads files one bit at a time."""
     @abstractmethod
-    def __init__(self,
-                 input_file: BinaryIO,
-                 padded: bool | None) -> None:
+    def __init__(self, input_file: BinaryIO) -> None:
+        ...
+
+    @abstractmethod
+    def _read(self,
+              method: Callable,
+              fmt: str | list[str]) -> bool | bytes | Codeword | None:
         ...
 
     @property
     @abstractmethod
-    def bit(self) -> bool | None:
+    def next_bit(self) -> bool | None:
         ...
 
     @property
     @abstractmethod
-    def literal(self) -> bytes | None:
-        ...
-
-    @property
-    @abstractmethod
-    def token(self) -> bytes | None:
+    def next_byte(self) -> bytes | None:
         ...
 
 
 class Writer(ABC):
     @abstractmethod
-    def write_to(self, output_file: BinaryIO, padded: bool | None) -> None:
+    def write_to(self, output_file: BinaryIO) -> None:
         ...
 
     @abstractmethod
@@ -37,10 +45,6 @@ class Writer(ABC):
 
     @abstractmethod
     def byte(self, byte: bytes) -> None:
-        ...
-
-    @abstractmethod
-    def token(self, token: bytes) -> None:
         ...
 
 
@@ -103,43 +107,34 @@ class Tree(ABC):
 
 
 class Token(ABC):
-    @abstractmethod
-    def __getitem__(self, key: int | slice) -> int | list[int]:
-        ...
-
-    @abstractmethod
-    def __bytes__(self) -> bytes:
-        ...
-
     @property
     @abstractmethod
-    def is_token(self) -> bool:
-        ...
-
-    @classmethod
-    @abstractmethod
-    def literal(cls, character: int) -> Self:
-        ...
-
-    @classmethod
-    @abstractmethod
-    def decode(cls, codeword: bytes) -> Self | None:
+    def codeword(self) -> Codeword:
         ...
 
     @classmethod
     @abstractmethod
     def encode(cls,
                start: int,
-               frame: bytearray,
+               frame: bytes,
                history: bytearray,
                buffer: bytearray) -> Self | None:
+        ...
+
+    @classmethod
+    @abstractmethod
+    def codeword_length(cls, token: bytes | Codeword) -> int:
+        ...
+
+    @staticmethod
+    def is_token(token: bytes | Codeword) -> bool:
         ...
 
 
 class Window(ABC):
     @property
     @abstractmethod
-    def output(self) -> Generator[int, None, None]:
+    def output(self) -> Generator[Token | bytes, None, None]:
         ...
 
 
@@ -147,8 +142,3 @@ class Model(ABC):
     @property
     def executor(self) -> Callable[[BinaryIO], None]:
         ...
-
-
-class Weight(NamedTuple):
-    byte: bytes
-    weight: int
