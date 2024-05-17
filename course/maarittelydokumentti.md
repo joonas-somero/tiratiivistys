@@ -1,9 +1,14 @@
 # Määrittelydokumentti
 
+> [!NOTE]
+> Projektissa jatketaan aiemmalla kurssitoteutuksella kesken jäänyttä työtä.
+
+
 ## Ohjelmointikieli
 
 Python
 
+> [!TIP]
 > Lisäksi tarvittaessa vertaisarviointiin JavaScript.
 
 
@@ -19,10 +24,10 @@ Tiedon tiivistys aihe-esimerkin mukaisesti pakkausalgoritmejä vertaillen.
 
 ## Ohjelman saamat syötteet
 
-Ohjelmalle annetaan syötteeksi joko häviöttömästi pakattava tiedosto tai pakattu tiedosto jonka ohjelma palauttaa alkuperäiseen muotoonsa.
+Ohjelmalle annetaan syötteeksi joko häviöttömästi pakattava tiedosto tai pakattu tiedosto, jonka ohjelma palauttaa alkuperäiseen muotoonsa.
 
 
-## Taivoiteltavat aika- ja tilavaativuudet
+## Tavoiteltavat aika- ja tilavaativuudet
 
 ...
 
