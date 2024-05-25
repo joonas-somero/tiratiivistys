@@ -1,6 +1,7 @@
 # Käyttöohje
 
->Dokumentaatiossa esitellyt komennot olettavat suorituksen tapahtuvan Poetryn luomassa virtuaaliympäristössä.
+> [!IMPORTANT]
+> Dokumentaatiossa esitellyt komennot olettavat suorituksen tapahtuvan Poetryn luomassa virtuaaliympäristössä.
 
 
 ## Poetry
