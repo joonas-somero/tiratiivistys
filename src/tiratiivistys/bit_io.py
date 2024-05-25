@@ -17,10 +17,9 @@ class BitReader(Reader):
               | type(ConstBitStream.readlist),
               fmt: str | list[str]) -> bool | bytes | Codeword | None:
         try:
-            value = method(fmt)
-            if self._stream.pos > self._max_pos:
+            if self._stream.pos >= self._max_pos:
                 raise ReadError
-            return value
+            return method(fmt)
         except ReadError:
             return None
 
