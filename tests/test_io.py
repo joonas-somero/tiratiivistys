@@ -1,9 +1,6 @@
 import unittest
-from random import randbytes
 
-from bitstring import Bits
-
-from tiratiivistys.constants import N_BITS
+from tiratiivistys.constants import MAX_OFFSET
 from tiratiivistys.classes import Codeword
 from tiratiivistys.huffman.io import HuffmanReader, HuffmanWriter
 from tiratiivistys.lempel_ziv.io import LempelZivReader, LempelZivWriter
@@ -35,7 +32,7 @@ class TestLempelZivReader(unittest.TestCase):
         self.assertIsInstance(result, bytes)
 
     def test_next_token_returns_Codeword(self):
-        data = randbytes((N_BITS*2) // 8)
+        data = b'\xAB\xCD\x00'
         reader = LempelZivReader(helpers.get_named_file(data))
 
         result = reader.next_token
@@ -68,3 +65,18 @@ class TestHuffmanWriter(unittest.TestCase):
                     expectation = i.to_bytes() + j.to_bytes()
                     result = output_file.read()
                     self.assertSequenceEqual(result, expectation)
+
+
+class TestLempelZivWriter(unittest.TestCase):
+    def test_token_writes_codeword_as_offset_length_pair(self):
+        with helpers.get_empty_file() as output_file:
+            codeword = Codeword(MAX_OFFSET//5, MAX_OFFSET//3)
+
+            writer = LempelZivWriter()
+            writer.token(codeword)
+            writer.write_to(output_file)
+            output_file.seek(0)
+
+            expectation = helpers.codeword_to_bytes(codeword)
+            result = output_file.read()
+            self.assertSequenceEqual(result, expectation)
