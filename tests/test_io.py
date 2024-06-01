@@ -65,6 +65,6 @@ class TestHuffmanWriter(unittest.TestCase):
                     writer.write_to(output_file)
                     output_file.seek(0)
 
-                    expectation = int.to_bytes(i) + int.to_bytes(j)
+                    expectation = i.to_bytes() + j.to_bytes()
                     result = output_file.read()
                     self.assertSequenceEqual(result, expectation)

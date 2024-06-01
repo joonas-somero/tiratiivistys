@@ -32,7 +32,7 @@ class BitReader(Reader):
     @property
     def next_byte(self) -> bytes | None:
         method = self._stream.read
-        fmt = "bytes:1"
+        fmt = "bytes1"
         return self._read(method, fmt)
 
 

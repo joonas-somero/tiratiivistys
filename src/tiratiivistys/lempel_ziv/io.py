@@ -14,7 +14,7 @@ class LempelZivReader(BitReader):
     @property
     def next_token(self) -> Codeword | None:
         method = self._stream.readlist
-        fmt = [f"uint:{N_BITS}"] * 2
+        fmt = [f"uint{N_BITS}"] * 2
         result = self._read(method, fmt)
         return (result
                 if result is None
