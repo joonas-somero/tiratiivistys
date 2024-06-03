@@ -7,7 +7,7 @@ readme = "README.md"
 packages = [{include = "tiratiivistys", from = "src"}]
 
 [tool.poetry.dependencies]
-python = "^3.11"
+python = "^3.12"
 click = "8.1.7"
 bitstring = "4.2.3"
 
