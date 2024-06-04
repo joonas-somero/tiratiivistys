@@ -3,7 +3,7 @@ from typing import BinaryIO, Callable
 from bitstring import ConstBitStream, BitArray
 from bitstring.exceptions import ReadError
 
-from tiratiivistys.classes import Codeword, Reader, Writer
+from tiratiivistys.classes import Reader, Writer
 
 
 class BitReader(Reader):
@@ -12,28 +12,21 @@ class BitReader(Reader):
                                       offset=offset)
         self._max_pos = len(self._stream)
 
-    def _read(self,
-              method: type(ConstBitStream.read)
-              | type(ConstBitStream.readlist),
-              fmt: str | list[str]) -> bool | bytes | Codeword | None:
+    def _read(self, fmt: str) -> bool | bytes | int | None:
         try:
             if self._stream.pos >= self._max_pos:
                 raise ReadError
-            return method(fmt)
+            return self._stream.read(fmt)
         except ReadError:
             return None
 
     @property
     def next_bit(self) -> bool | None:
-        method = self._stream.read
-        fmt = "bool"
-        return self._read(method, fmt)
+        return self._read("bool")
 
     @property
     def next_byte(self) -> bytes | None:
-        method = self._stream.read
-        fmt = "bytes1"
-        return self._read(method, fmt)
+        return self._read("bytes1")
 
 
 class BitWriter(Writer):

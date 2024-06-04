@@ -1,2 +1,2 @@
-from tiratiivistys.lempel_ziv.encoder import LempelZivEncoder as Encoder
-from tiratiivistys.lempel_ziv.decoder import LempelZivDecoder as Decoder
+from tiratiivistys.lempel_ziv.encoder import LZWEncoder as Encoder
+from tiratiivistys.lempel_ziv.decoder import LZWDecoder as Decoder

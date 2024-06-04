@@ -7,20 +7,13 @@ class Weight(NamedTuple):
     weight: int
 
 
-class Codeword(NamedTuple):
-    offset: int
-    length: int
-
-
 class Reader(ABC):
     @abstractmethod
     def __init__(self, input_file: BinaryIO) -> None:
         ...
 
     @abstractmethod
-    def _read(self,
-              method: Callable,
-              fmt: str | list[str]) -> bool | bytes | Codeword | None:
+    def _read(self, fmt: str) -> bool | bytes | int | None:
         ...
 
     @property
@@ -106,35 +99,20 @@ class Tree(ABC):
         ...
 
 
-class Token(ABC):
-    @property
+class Dictionary(ABC):
     @abstractmethod
-    def codeword(self) -> Codeword:
+    def __contains__(self, item: bytes | None) -> bool:
         ...
 
-    @classmethod
-    @abstractmethod
-    def encode(cls,
-               start: int,
-               frame: bytes,
-               history: bytearray,
-               buffer: bytearray) -> Self | None:
+    def __getitem__(self, key: int | None) -> bytes | None:
         ...
 
-    @classmethod
     @abstractmethod
-    def codeword_length(cls, token: bytes | Codeword) -> int:
+    def index(self, value: bytes) -> int:
         ...
 
-    @staticmethod
-    def is_token(token: bytes | Codeword) -> bool:
-        ...
-
-
-class Window(ABC):
-    @property
     @abstractmethod
-    def output(self) -> Generator[Token | bytes, None, None]:
+    def add(self, item: bytes) -> None:
         ...
 
 

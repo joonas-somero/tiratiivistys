@@ -13,7 +13,7 @@ from tiratiivistys.compressor import Compressor
               help="operation")
 @click.option("--algorithm", "-a",
               required=True,
-              type=click.Choice(choices=("Huffman", "Lempel-Ziv"),
+              type=click.Choice(choices=("Huffman", "LZW"),
                                 case_sensitive=False),
               help="compression algorithm (case insensitive)")
 @click.argument("input_file", type=click.File("rb"))
@@ -27,7 +27,7 @@ def command_line_interface(compress: bool,
     """
 
     module = {"Huffman": huffman,
-              "Lempel-Ziv": lempel_ziv}[algorithm]
+              "LZW": lempel_ziv}[algorithm]
     model = (module.Encoder
              if compress
              else module.Decoder)

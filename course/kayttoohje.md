@@ -26,22 +26,21 @@ Usage: python -m tiratiivistys [OPTIONS] INPUT_FILE OUTPUT_FILE
 
 Options:
   -c, --compress / -r, --restore  operation  [required]
-  -a, --algorithm [Huffman|Lempel-Ziv]
-                                  compression algorithm (case insensitive)
+  -a, --algorithm [Huffman|LZW]   compression algorithm (case insensitive)
                                   [required]
   --help                          Show this message and exit.
 ```
 
-Esimerkiksi tiedoston _big\_band.ensemble_ pakkaaminen tiedostoon _quartet.ensemble_ onnistuu _Lempel-Ziv_-algoritmia käyttäen komennolla
+Esimerkiksi tiedoston _big\_band.ensemble_ pakkaaminen tiedostoon _quartet.ensemble_ onnistuu _Lempel-Ziv-Welch_-algoritmia käyttäen komennolla
 
 ```bash
-python -m tiratiivistys --compress -algorithm Lempel-Ziv big_band.ensemble quartet.ensemble
+python -m tiratiivistys --compress -algorithm LZW big_band.ensemble quartet.ensemble
 ```
 
 Tai hieman lyhyemmin
 
 ```bash
-python -m tiratiivistys -ca lempel-ziv big_band.ensemble quartet.ensemble
+python -m tiratiivistys -ca lzw big_band.ensemble quartet.ensemble
 ```
 
 Vastaavasti esim. Huffman-koodausta käyttäen pakatun tiedoston _skiff.boat_ palauttaminen tiedostoksi _yacht.boat_ tapahtuu komennolla

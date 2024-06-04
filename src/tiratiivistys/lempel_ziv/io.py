@@ -1,30 +1,17 @@
 from bitstring import Bits
 
-from tiratiivistys.constants import N_BITS
-from tiratiivistys.classes import Codeword
+from tiratiivistys.constants import BIT_WIDTH
 from tiratiivistys.bit_io import BitReader, BitWriter
 
 
-class LempelZivReader(BitReader):
+class LZWReader(BitReader):
     @property
-    def next_literal(self) -> bytes | None:
-        result = self.next_byte
-        return result
-
-    @property
-    def next_token(self) -> Codeword | None:
-        method = self._stream.readlist
-        fmt = [f"uint{N_BITS}"] * 2
-        result = self._read(method, fmt)
-        return (result
-                if result is None
-                else Codeword(*result))
+    def next_codeword(self) -> int | None:
+        fmt = f"uint{BIT_WIDTH}"
+        return self._read(fmt)
 
 
-class LempelZivWriter(BitWriter):
-    def token(self, codeword: Codeword) -> None:
-        def bits(b): return f"uint{N_BITS}={b}"
-        self._buffer.append(", ".join([
-            bits(codeword.offset),
-            bits(codeword.length)
-        ]))
+class LZWWriter(BitWriter):
+    def codeword(self, codeword: int) -> None:
+        initializer = f"uint{BIT_WIDTH}={codeword}"
+        self._buffer.append(initializer)

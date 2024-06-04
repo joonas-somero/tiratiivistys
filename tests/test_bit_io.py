@@ -1,7 +1,6 @@
 import unittest
 from tempfile import NamedTemporaryFile, TemporaryFile
 
-from tiratiivistys.classes import Codeword
 from tiratiivistys.bit_io import BitReader, BitWriter
 from tests import helpers
 

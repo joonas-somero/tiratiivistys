@@ -34,10 +34,13 @@ class TestHuffmanNode(unittest.TestCase):
     def test_get_child(self):
         left_bit = False
         right_bit = True
+        no_bit = None
         result = self.root.get_child(left_bit)
         self.assertEqual(result, self.root.left_child)
         result = self.root.get_child(right_bit)
         self.assertEqual(result, self.root.right_child)
+        result = self.root.get_child(no_bit)
+        self.assertIsNone(result)
 
     def test_reproduce(self):
         node = HuffmanNode()

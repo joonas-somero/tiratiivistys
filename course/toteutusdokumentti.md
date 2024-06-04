@@ -24,18 +24,15 @@ Ohjelman lähdekoodi löytyy hakemistosta `src/tiratiivistys/`, jonka sisältö 
       - `HuffmanNode`: Huffman-puun solmuja esittävä luokka
     * `tree.py`
       - `HuffmanTree`: Huffman-puun toteuttava luokka
-- `lempel_ziv/`: Lempel-Ziv LZ77-algoritmin toteuttava moduuli
+- `lempel_ziv/`: Lempel-Ziv-Welch-algoritmin toteuttava moduuli
     * `decoder.py`
-        - `LempelZivDecoder`: Luokka LZ77-algoritmilla pakatun tiedoston purkamiseen
+        - `LZWDecoder`: Luokka Lempel-Ziv-Welch-algoritmilla pakatun tiedoston purkamiseen
     * `encoder.py`
-        - `LempelZivEncoder`: Luokka tiedoston pakkaamiseen LZ77-algoritmilla
+        - `LZWEncoder`: Luokka tiedoston pakkaamiseen Lempel-Ziv-Welch-algoritmilla
     * `io.py`: Moduulin _bit_io.py_ luokista perivät tiedoston luku-/kirjoitusluokat
-      - `ZempelZivReader` ja `LempelZivWriter`
-    * `token.py`
-        - `LempelZivToken`: LZ77-algoritmin käyttämiä kolmikkoja käsittelevä luokka
-    * `window.py`
-        - `SlidingWindow`: LZ77-algoritmin _sliding window_ -tekniikan toteuttava luokka
-        - `TokenWindow`: Kirjanpitoluokka LZ77-algoritmilla pakatun tiedoston palauttamiseen
+      - `LZWReader` ja `LZWWriter`
+    * `dictionary.py`
+        - `LZWDictionary`: Lempel-Ziv-Welch-algoritmin käyttämä sanakirjaluokka
 
 
 ## Suorituskykyvertailu

@@ -1,32 +1,38 @@
 from typing import BinaryIO, Generator, Callable
 
 from tiratiivistys.classes import Model
-from tiratiivistys.lempel_ziv.io import LempelZivReader as Reader
-from tiratiivistys.lempel_ziv.window import TokenWindow as Window
-from tiratiivistys.lempel_ziv.token import LempelZivToken as Token
+from tiratiivistys.lempel_ziv.io import LZWReader as Reader
+from tiratiivistys.lempel_ziv.dictionary import LZWDictionary as Dictionary
 
 
-class LempelZivDecoder(Model):
+class LZWDecoder(Model):
     def __init__(self, compressed_file: BinaryIO) -> None:
         self.__compressed_file = compressed_file
 
     @property
-    def __data(self) -> Generator[bytes, None, None]:
-        reader = Reader(self.__compressed_file)
-        while (prefix := reader.next_bit) is not None:
-            result = (reader.next_token
-                      if prefix
-                      else reader.next_literal)
-            result is not None and (yield result)
+    def __decoded(self) -> Generator[bytes, None, None]:
+        def get_first_byte(bs):
+            return b'%c' % bs[0]
 
-    @property
-    def __decoded(self) -> Generator[int, None, None]:
-        window = Window(self.__data, Token)
-        return window.output
+        dictionary = Dictionary()
+        reader = Reader(self.__compressed_file)
+
+        codeword = reader.next_codeword
+        output_bytes = dictionary[codeword]
+        yield output_bytes
+
+        while (codeword := reader.next_codeword) is not None:
+            if decoded_word := dictionary[codeword]:
+                dictionary.add(output_bytes + get_first_byte(decoded_word))
+                output_bytes = decoded_word
+            else:
+                dictionary.add(output_bytes + get_first_byte(output_bytes))
+            yield output_bytes
 
     def __to_file(self, output_file: BinaryIO) -> None:
         for character in self.__decoded:
-            output_file.write(character)
+            if character is not None:
+                output_file.write(character)
 
     @property
     def executor(self) -> Callable[[BinaryIO], None]:

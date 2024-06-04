@@ -14,7 +14,7 @@ Python
 
 ## Toteutettavat algoritmit
 
-Lempel-Ziv, Huffman
+Lempel-Ziv-Welch, Huffman-koodaus
 
 
 ## Ratkaistava ongelma
@@ -34,8 +34,7 @@ Ohjelmalle annetaan syötteeksi joko häviöttömästi pakattava tiedosto tai pa
 
 ## Lähteet
 
-* [LZ77 and LZ78, Wikipedia](https://en.wikipedia.org/wiki/LZ77_and_LZ78)
-* [Lempel–Ziv–Storer–Szymanski, Wikipedia](https://en.wikipedia.org/wiki/Lempel–Ziv–Storer–Szymanski)
+* [Lempel–Ziv–Welch, Wikipedia](https://en.wikipedia.org/wiki/Lempel-Ziv-Welch)
 * [Huffman coding, Wikipedia](https://en.wikipedia.org/wiki/Huffman_coding)
 
 

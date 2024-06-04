@@ -1,25 +1,26 @@
 from typing import BinaryIO, Callable
 
 from tiratiivistys.classes import Model
-from tiratiivistys.lempel_ziv.io import LempelZivWriter as Writer
-from tiratiivistys.lempel_ziv.window import SlidingWindow as Window
-from tiratiivistys.lempel_ziv.token import LempelZivToken as Token
+from tiratiivistys.lempel_ziv.io import LZWWriter as Writer
+from tiratiivistys.lempel_ziv.dictionary import LZWDictionary as Dictionary
 
 
-class LempelZivEncoder(Model):
+class LZWEncoder(Model):
     def __init__(self, input_file: BinaryIO) -> None:
         self.__input_file = input_file
         self.__writer = Writer()
 
     def __encode(self):
-        window = Window(self.__input_file, Token)
-        for match in window.output:
-            is_token = Token.is_token(match)
-            self.__writer.bit(is_token)
-            if is_token:
-                self.__writer.token(match)
+        dictionary = Dictionary()
+        input_bytes = self.__input_file.read(1)
+        while next_byte := self.__input_file.read(1):
+            if input_bytes + next_byte in dictionary:
+                input_bytes += next_byte
             else:
-                self.__writer.byte(match)
+                self.__writer.codeword(dictionary.index(input_bytes))
+                dictionary.add(input_bytes + next_byte)
+                input_bytes = next_byte
+        self.__writer.codeword(dictionary.index(input_bytes))
 
     def __to_file(self, output_file: BinaryIO) -> None:
         self.__writer.write_to(output_file)
