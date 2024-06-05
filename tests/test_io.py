@@ -58,3 +58,18 @@ class TestHuffmanWriter(unittest.TestCase):
                     expectation = i.to_bytes() + j.to_bytes()
                     result = output_file.read()
                     self.assertSequenceEqual(result, expectation)
+
+
+class TestLZWWriter(unittest.TestCase):
+    def test_codeword_writes_codeword_of_bit_width(self):
+        with helpers.get_empty_file() as output_file:
+            data = helpers.get_max_int(BIT_WIDTH)
+
+            writer = LZWWriter()
+            writer.codeword(data)
+            writer.write_to(output_file)
+            output_file.seek(0)
+
+            expectation = helpers.get_padded_bytes(BIT_WIDTH)
+            result = output_file.read()
+            self.assertSequenceEqual(result, expectation)
