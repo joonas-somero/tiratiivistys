@@ -1,5 +1,4 @@
 import unittest
-from math import ceil
 
 from tiratiivistys.constants import BIT_WIDTH
 from tiratiivistys.huffman.io import HuffmanReader, HuffmanWriter
@@ -25,15 +24,15 @@ class TestHuffmanReader(unittest.TestCase):
 
 class TestLZWReader(unittest.TestCase):
     def test_next_codeword_returns_int(self):
-        data = b"\xFF" * ceil(BIT_WIDTH / 8)
+        data = b"\xFF" * helpers.get_min_bytes(BIT_WIDTH)
         reader = LZWReader(helpers.get_named_file(data))
 
         result = reader.next_codeword
         self.assertIsInstance(result, int)
-        self.assertEqual(result, (2**BIT_WIDTH) - 1)
+        self.assertEqual(result, helpers.get_max_int(BIT_WIDTH))
 
     def test_next_codeword_returns_none_at_end_of_stream(self):
-        data = b"\xFF" * ceil(BIT_WIDTH // 8)
+        data = b"\xFF" * helpers.get_min_bytes(BIT_WIDTH)
         reader = LZWReader(helpers.get_named_file(data))
 
         control = reader.next_byte

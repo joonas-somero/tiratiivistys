@@ -1,5 +1,6 @@
 from urllib import request
 from tempfile import TemporaryFile, NamedTemporaryFile
+from math import ceil
 
 
 def get_named_file(content):
@@ -16,3 +17,24 @@ def get_remote_file(url):
 
 def get_empty_file():
     return TemporaryFile()
+
+
+def get_max_int(n_bits):
+    return (2**n_bits) - 1
+
+
+def get_min_bytes(n_bits):
+    return ceil(n_bits / 8)
+
+
+def get_ones_justified(n_ones):
+    total_bits = get_min_bytes(n_ones) * 8
+    return (n_ones * '1').ljust(total_bits, '0')
+
+
+def get_padded_bytes(n_ones):
+    bin_string = get_ones_justified(n_ones)
+    byte_size_chunks = [bin_string[i:i+8]
+                        for i
+                        in range(0, len(bin_string), 8)]
+    return bytes([int(chunk, 2) for chunk in byte_size_chunks])
