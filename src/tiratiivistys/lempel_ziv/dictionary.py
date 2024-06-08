@@ -4,7 +4,7 @@ from tiratiivistys.classes import Dictionary
 
 class LZWDictionary(Dictionary):
     def __init__(self) -> None:
-        self.__codes = [i.to_bytes() for i in range(2**8)]
+        self.__codes: [bytes] = [i.to_bytes() for i in range(2**8)]
         self.__max_length = (2**BIT_WIDTH) - 1
 
     def __contains__(self, item: bytes | None) -> bool:
