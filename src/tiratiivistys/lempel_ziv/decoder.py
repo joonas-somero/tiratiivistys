@@ -12,7 +12,7 @@ class LZWDecoder(Model):
     @property
     def __decoded(self) -> Generator[bytes, None, None]:
         def get_first_byte(bs):
-            return b'%c' % bs[0]
+            return b"%c" % bs[0]
 
         dictionary = Dictionary()
         reader = Reader(self.__compressed_file)

@@ -29,7 +29,7 @@ def get_min_n_bytes(n_bits):
 
 def get_ones_justified(n_ones):
     total_bits = get_min_n_bytes(n_ones) * 8
-    return (n_ones * '1').ljust(total_bits, '0')
+    return (n_ones * "1").ljust(total_bits, "0")
 
 
 def get_padded_bytes(n_ones):

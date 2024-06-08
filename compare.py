@@ -19,8 +19,8 @@ SUPPLEMENTAL = [{"name": "Green Eggs and Ham",
 
 MATERIAL = []
 
-ALGORITHMS = [{"name": "Huffman", "encoder": huffman.Encoder},
-              {"name": "Lempel-Ziv", "encoder": lempel_ziv.Encoder}]
+ALGORITHMS = [{"name": "Huffman Coding", "encoder": huffman.Encoder},
+              {"name": "Lempel-Ziv-Welch", "encoder": lempel_ziv.Encoder}]
 
 
 def get_book_file(book):
