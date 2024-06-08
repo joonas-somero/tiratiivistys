@@ -24,7 +24,7 @@ class TestHuffmanReader(unittest.TestCase):
 
 class TestLZWReader(unittest.TestCase):
     def test_next_codeword_returns_int(self):
-        data = b"\xFF" * helpers.get_min_bytes(BIT_WIDTH)
+        data = b"\xFF" * helpers.get_min_n_bytes(BIT_WIDTH)
         reader = LZWReader(helpers.get_named_file(data))
 
         result = reader.next_codeword
@@ -32,7 +32,7 @@ class TestLZWReader(unittest.TestCase):
         self.assertEqual(result, helpers.get_max_int(BIT_WIDTH))
 
     def test_next_codeword_returns_none_at_end_of_stream(self):
-        data = b"\xFF" * helpers.get_min_bytes(BIT_WIDTH)
+        data = b"\xFF" * helpers.get_min_n_bytes(BIT_WIDTH)
         reader = LZWReader(helpers.get_named_file(data))
 
         control = reader.next_byte
