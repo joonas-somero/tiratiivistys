@@ -52,4 +52,4 @@ python -m tiratiivistys -ra huffman skiff.boat yacht.boat
 
 ## Lisätietoa
 
-Mm. suorituskyky- ja yksikkötestaus on kuvailtu [testausdokumentissa](testausdokumentti.md). Ohjelman yleisrakenne ja suorituskykyvertailu löytyvät puolestaan [toteutusdokumentista](toteutusdokumentti.md).
+Mm. suorituskyky- ja yksikkötestaus on kuvailtu [testausdokumentissa](testausdokumentti.md). Ohjelman yleisrakenne sekä toteutusten suorituskykyvertailu löytyvät puolestaan [toteutusdokumentista](toteutusdokumentti.md).

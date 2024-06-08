@@ -50,8 +50,8 @@ Kuten ovat myös saavutetut tiivistyssuhteet.
 
 - | Green Eggs and Ham | Alice's Adventures in Wonderland | Kalevala | War and Peace
 --- | --- | --- | --- | ---
-Huffman | 1.71 | 1.70 | 1.69 | 1.71
-Lempel-Ziv | 1.56 | 0.96 | 0.97 | 0.95
+Huffman Coding | 1.71 | 1.70 | 1.69 | 1.71
+Lempel-Ziv-Welch | 1.92 | 1.96 | 1.87 | 1.96
 
 Suorituskyvyn osalta on mainittava myös suorituksen tuskastuttava hitaus.
 
