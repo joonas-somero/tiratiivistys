@@ -34,7 +34,7 @@ Options:
 Esimerkiksi tiedoston _big\_band.ensemble_ pakkaaminen tiedostoon _quartet.ensemble_ onnistuu _Lempel-Ziv-Welch_-algoritmia käyttäen komennolla
 
 ```bash
-python -m tiratiivistys --compress -algorithm LZW big_band.ensemble quartet.ensemble
+python -m tiratiivistys --compress --algorithm LZW big_band.ensemble quartet.ensemble
 ```
 
 Tai hieman lyhyemmin
